@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediAssist - Medication</title>
+    <link href="logo.png" type="image/x-icon" rel="icon">
+    <script src="theme.js" defer></script>
+    <script src="translations.js" defer></script>
+    <style>
+        :root {
+            --primary: #007e81;
+            --secondary: #0e8898;
+            --text: #434a54;
+            --light: #f5f7fa;
+            --siderbar: #fff;
+            --sidebar_text: #333;
+            --white_black: white;
+            --black_white: black;
+            --cointainer: rgba(255, 255, 255, 0.9);
+            --shadow: rgba(0, 0, 0, 0.1);
+            --error: #dc3545;
+            --notification: #77b827;
+        }
+
+        [data-theme="dark"] {
+            --primary: #00a5a8;
+            --secondary: #0da8ba;
+            --text: #e0e0e0;
+            --light: #121212;
+            --siderbar: #00120c;
+            --sidebar_text: #a7a7a7;
+            --white_black: black;
+            --black_white: white;
+            --cointainer: rgba(0, 0, 0, 0.1);
+            --shadow: rgba(255, 255, 255, 0.9);
+            --error: #e63946;
+            --notification: #8bc34a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+            background-image: url("Accueil-background.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            min-height: 100vh;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #01180a00;
+            color: white;
+            padding: 15px 20px;
+        }
+
+        .menu-btn {
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: var(--siderbar);
+            overflow-x: hidden;
+            transition: 0.3s;
+            box-shadow: 2px 0 8px var(--shadow);
+            z-index: 1001;
+            padding-top: 60px;
+        }
+
+        .sidebar a {
+            padding: 12px 24px;
+            text-decoration: none;
+            font-size: 18px;
+            color: var(--sidebar_text);
+            display: block;
+            transition: background-color 0.2s;
+        }
+
+        .sidebar a:hover {
+            background-color: #77b827;
+        }
+
+        #closeSidebar {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--black_white);
+            transition: color 0.3s ease;
+        }
+
+        #closeSidebar:hover {
+            color: rgb(225, 52, 0);
+        }
+
+        .medication-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: var(--cointainer);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px var(--shadow);
+            padding: 20px;
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.2rem;
+        }
+
+        .medication-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 30px;
+        }
+
+        .medication-item {
+            background-color: rgba(0, 126, 129, 0.1);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        .medication-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .medication-info {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .medication-photo {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 15px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .medication-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .medication-photo .initials {
+            font-size: 18px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .medication-details {
+            flex: 1;
+        }
+
+        .medication-name {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .medication-specs {
+            color: var(--text);
+            opacity: 0.8;
+        }
+
+        .medication-time {
+            font-weight: bold;
+            color: var(--notification);
+        }
+
+        .delete-btn {
+            background-color: var(--error);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-left: 15px;
+            transition: background-color 0.3s;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        .add-section {
+            margin-top: 30px;
+            background-color: var(--cointainer);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .add-section h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: var(--white_black);
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        .add-btn {
+            background-color: var(--primary);
+            color: var(--white_black);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(74, 137, 220, 0.3);
+        }
+
+        .add-btn:hover {
+            background-color: #77b827;
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(74, 137, 220, 0.4);
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text);
+            opacity: 0.7;
+            padding: 30px;
+        }
+
+        .photo-preview {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin: 10px auto;
+            display: block;
+            background-color: #eee;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--notification);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .medication-container {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            .medication-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .medication-info {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .delete-btn {
+                margin-left: 0;
+                margin-top: 10px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <button class="menu-btn" id="menuToggle">&#9776;</button>
+    </header>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar">
+        <span id="closeSidebar">&times;</span>
+        <a href="accueil.html">🏠 Home</a>
+        <a href="profil.html">👤 Profile</a>
+        <a href="emergency.html">🆘 Emergency</a>
+        <a href="appointments.html">📅 Appointments</a>
+        <a href="schedule.html">⏰ Schedule</a>
+        <a href="prescriptions.html">📝 Prescription</a>
+    </div>
+
+    <div class="medication-container">
+        <h1 data-translate="data-translate=">Medication</h1>
+
+        <ul class="medication-list" id="medicationList">
+            <!-- Medications will load here -->
+        </ul>
+
+        <div class="add-section">
+            <h2 data-translate="medication.addBtn">Add New Medication</h2>
+            <form id="medicationForm">
+                <div class="input-group">
+                    <input type="text" id="name" placeholder="Medication Name" required data-translate-placeholder="medication.name">
+                </div>
+                <div class="input-group">
+                    <input type="text" id="dose" placeholder="Dose (e.g., 500mg)" required data-translate-placeholder="medication.dose">
+                </div>
+                <div class="input-group">
+                    <input type="text" id="frequency" placeholder="Frequency (e.g., Twice daily)" required data-translate-placeholder="medication.frequency">
+                </div>
+                <div class="input-group">
+                    <input type="time" id="time" required>
+                </div>
+                <div class="input-group">
+                    <input type="file" id="photo" accept="image/*" onchange="previewMedicationPhoto()">
+                    <img id="photoPreview" class="photo-preview" style="display: none;">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="add-btn" data-translate="medication.saveBtn">Save</button>
+                    <button type="button" class="delete-btn" onclick="cancelAddMedication()" data-translate="medication.cancelBtn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Sidebar functionality
+        const sidebar = document.getElementById('sidebar');
+        const menuToggle = document.getElementById('menuToggle');
+        const closeSidebar = document.getElementById('closeSidebar');
+
+        if (menuToggle && closeSidebar && sidebar) {
+            menuToggle.addEventListener('click', () => {
+                sidebar.style.width = '250px';
+            });
+
+            closeSidebar.addEventListener('click', () => {
+                sidebar.style.width = '0';
+            });
+
+            window.addEventListener('click', (e) => {
+                if (e.target !== sidebar && e.target !== closeSidebar && e.target !== menuToggle) {
+                    sidebar.style.width = '0';
+                }
+            });
+        }
+
+        // Photo preview functionality
+        function previewMedicationPhoto() {
+            const photoInput = document.getElementById('photo');
+            const photoPreview = document.getElementById('photoPreview');
+
+            if (photoInput.files && photoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    photoPreview.src = e.target.result;
+                    photoPreview.style.display = 'block';
+                };
+                reader.readAsDataURL(photoInput.files[0]);
+            }
+        }
+
+        // Load medications for current user
+        function loadMedications() {
+            const medicationList = document.getElementById('medicationList');
+            medicationList.innerHTML = '';
+
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.username === currentUser?.username);
+            const medications = user?.medications || [];
+
+            if (medications.length === 0) {
+                medicationList.innerHTML = '<div class="empty-state" data-translate="medication.emptyState">No medications saved yet. Add your first medication below.</div>';
+                return;
+            }
+
+            medications.forEach((med, index) => {
+                const li = document.createElement('li');
+                li.className = 'medication-item';
+
+                // Check if it's time for this medication
+                const now = new Date();
+                const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+                const isTimeForMedication = med.time === currentTime;
+
+                // Create photo element
+                const photoElement = med.photo
+                    ? `<img src="${med.photo}" alt="${med.name}">`
+                    : `<div class="initials">${med.name.charAt(0).toUpperCase()}</div>`;
+
+                li.innerHTML = `
+                    ${isTimeForMedication ? '<div class="notification-badge">!</div>' : ''}
+                    <div class="medication-info">
+                        <div class="medication-photo">
+                            ${photoElement}
+                        </div>
+                        <div class="medication-details">
+                            <div class="medication-name">${med.name}</div>
+                            <div class="medication-specs">${med.dose} - ${med.frequency} <span data-translate="medication.at">at</span> <span class="medication-time">${med.time}</span></div>
+                        </div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteMedication(${index})"  data-translate="common.delete">Delete</button>
+                `;
+                medicationList.appendChild(li);
+            });
+        }
+
+        // Handle form submission
+        document.getElementById('medicationForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value.trim();
+            const dose = document.getElementById('dose').value.trim();
+            const frequency = document.getElementById('frequency').value.trim();
+            const timeValue = document.getElementById('time').value;
+            const photoInput = document.getElementById('photo');
+
+            if (!name || !dose || !frequency || !timeValue) {
+                alert('Please fill all required fields');
+                return;
+            }
+
+            // Format time consistently (HH:MM)
+            const timeParts = timeValue.split(':');
+            const time = `${timeParts[0].padStart(2, '0')}:${timeParts[1].padStart(2, '0')}`;
+
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const userIndex = users.findIndex(u => u.username === currentUser?.username);
+
+            if (userIndex === -1) {
+                alert('User not found!');
+                return;
+            }
+
+            if (!users[userIndex].medications) {
+                users[userIndex].medications = [];
+            }
+
+            // Handle the photo
+            let photoData = null;
+            if (photoInput.files && photoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    photoData = e.target.result;
+                    saveMedication();
+                };
+                reader.readAsDataURL(photoInput.files[0]);
+            } else {
+                saveMedication();
+            }
+
+            function saveMedication() {
+                // Add new medication
+                users[userIndex].medications.push({
+                    name,
+                    dose,
+                    frequency,
+                    time,
+                    photo: photoData
+                });
+
+                // Save to localStorage
+                localStorage.setItem('users', JSON.stringify(users));
+
+                // Refresh notifications
+                if (window.globalNotifications) {
+                    window.globalNotifications.loadNotifications();
+                }
+
+                // Clear inputs and reload medications
+                document.getElementById('medicationForm').reset();
+                document.getElementById('photoPreview').style.display = 'none';
+                loadMedications();
+            }
+        });
+
+        function deleteMedication(index) {
+            if (!confirm('Are you sure you want to delete this medication?')) {
+                return;
+            }
+
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const userIndex = users.findIndex(u => u.username === currentUser?.username);
+
+            if (userIndex === -1) return;
+
+            if (users[userIndex].medications) {
+                users[userIndex].medications.splice(index, 1);
+            }
+
+            localStorage.setItem('users', JSON.stringify(users));
+
+            // Refresh notifications
+            if (window.globalNotifications) {
+                window.globalNotifications.loadNotifications();
+            }
+
+            loadMedications();
+        }
+
+        function cancelAddMedication() {
+            document.getElementById('medicationForm').reset();
+            document.getElementById('photoPreview').style.display = 'none';
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadMedications();
+        });
+    </script>
+    <script src="notification.js"></script>
+</body>
+
+</html>

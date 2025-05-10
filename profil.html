@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediAssist - Profil</title>
+    <link href="logo.png" type="image/x-icon" rel="icon">
+    <script src="theme.js" defer></script>
+    <script src="translations.js" defer></script>
+    <style>
+        :root {
+            --primary: #007e81;
+            --secondary: #0e8898;
+            --text: #434a54;
+            --light: #f5f7fa;
+            --siderbar: #fff;
+            --sidebar_text: #333;
+            --white_black: white;
+            --black_white: black;
+            --cointainer: rgba(255, 255, 255, 0.9);
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --primary: #00a5a8;
+            --secondary: #0da8ba;
+            --text: #e0e0e0;
+            --light: #121212;
+            --siderbar: #00120c;
+            --sidebar_text: #a7a7a7;
+            --white_black: black;
+            --black_white: white;
+            --cointainer: rgba(0, 0, 0, 0.1);
+            --shadow: rgba(255, 255, 255, 0.9);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+            background-image: url("Accueil-background.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            min-height: 100vh;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #01180a00;
+            color: white;
+            padding: 15px 20px;
+        }
+
+        .menu-btn {
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: var(--siderbar);
+            overflow-x: hidden;
+            transition: 0.3s;
+            box-shadow: 2px 0 8px var(--shadow);
+            z-index: 1001;
+            padding-top: 60px;
+        }
+
+        .sidebar a {
+            padding: 12px 24px;
+            text-decoration: none;
+            font-size: 18px;
+            color: var(--sidebar_text);
+            display: block;
+            transition: background-color 0.2s;
+        }
+
+        .sidebar a:hover {
+            background-color: #77b827;
+        }
+
+        #closeSidebar {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--black_white);
+            transition: color 0.3s ease;
+        }
+
+        #closeSidebar:hover {
+            color: rgb(225, 52, 0);
+        }
+
+        .profile-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: var(--white_black);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px var(--shadow);
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .profile-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+
+        .profile-photo-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid var(--primary);
+            margin-bottom: 15px;
+            background-color: #f0f0f0;
+        }
+
+        .profile-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .upload-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background-color: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .upload-btn:hover {
+            background-color: #77b827;
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .profile-username {
+            color: var(--text);
+            opacity: 0.8;
+            font-size: 16px;
+        }
+
+        .profile-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .profile-field {
+            display: flex;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .field-label {
+            width: 150px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .field-value {
+            flex: 1;
+            padding: 10px;
+            background-color: rgba(0, 126, 129, 0.1);
+            border-radius: 8px;
+            color: var(--text);
+        }
+
+        .edit-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .edit-btn:hover {
+            background-color: #77b827;
+        }
+
+        .save-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            display: block;
+            width: 100%;
+            max-width: 200px;
+            margin-left: auto;
+            transition: background-color 0.3s;
+        }
+
+        .save-btn:hover {
+            background-color: #218838;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="tel"],
+        select {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: var(--white_black);
+            color: var(--text);
+        }
+
+        #openLogoutPopup {
+            background-color: var(--white_black);
+            color: var(--sidebar_text);
+            padding: 15px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #openLogoutPopup:hover {
+            background-color: #77b827;
+        }
+
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+            z-index: 1000;
+        }
+
+        .popup-content {
+            background: var(--white_black);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            width: 90%;
+            max-width: 350px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            animation: popupZoom 0.3s ease;
+        }
+
+        .popup-content button {
+            margin: 8px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: transform 0.2s;
+        }
+
+        .popup-content button:hover {
+            transform: scale(1.05);
+        }
+
+        #logoutBtn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        #cancelLogout {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes popupZoom {
+            from {
+                transform: scale(0.9);
+            }
+
+            to {
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .profile-container {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            .profile-field {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .field-label {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <button class="menu-btn" id="menuToggle">&#9776;</button>
+    </header>
+
+    <!-- Barre latérale -->
+    <div id="sidebar" class="sidebar">
+        <span id="closeSidebar">&times;</span>
+        <a href="accueil.html">🏠 Home</a>
+        <a href="medication.html">💊 Medications</a>
+        <a href="appointments.html">📅 Appointments</a>
+        <a href="emergency.html">🆘 Emergency</a>
+        <a href="schedule.html">⏰ Schedule</a>
+        <a href="prescriptions.html">📝 Prescription</a>
+        <hr>
+        <a href="settings.html">⚙️ Settings</a>
+        <a href="about_us.html">ℹ️ About Us</a>
+        <hr>
+        <a href="#" id="openLogoutPopup">Logout ➡️</a>
+    </div>
+
+    <!-- Contenu du profil -->
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-photo-container">
+                <img id="profilePhoto" class="profile-photo" src="default-profile.png" alt="profile picture">
+                <div class="upload-btn" id="uploadBtn">
+                    <span>+</span>
+                    <input type="file" id="photoUpload" accept="image/*" style="display: none;">
+                </div>
+            </div>
+            <h1 class="profile-name" id="profileName" data-translate="profile.title">Profile</h1>
+            <p class="profile-username" id="profileUsername">@Username</p>
+        </div>
+
+        <div class="profile-section">
+            <h2 class="section-title" data-translate="profile.personalInfo">Personal information</h2>
+
+            <div class="profile-field">
+                <span class="field-label" data-translate="profile.age">Age:</span>
+                <span class="field-value" id="ageField" data-translate="profile.notSpecified">Not specified</span>
+                <button class="edit-btn" onclick="editField('ageField', 'number')">Edit</button>
+            </div>
+
+            <div class="profile-field">
+                <span class="field-label" data-translate="profile.gender">Gender:</span>
+                <span class="field-value" id="genderField" data-translate="profile.notSpecified">Not specified</span>
+                <button class="edit-btn"
+                    onclick="editField('genderField', 'select', ['Male', 'Female'])">Edit</button>
+            </div>
+
+            <div class="profile-field">
+                <span class="field-label" data-translate="profile.bloodType">Blood_Type:</span>
+                <span class="field-value" id="bloodTypeField" data-translate="profile.notSpecified">Not specified</span>
+                <button class="edit-btn"
+                    onclick="editField('bloodTypeField', 'select', ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])">Edit</button>
+            </div>
+
+            <div class="profile-field">
+                <span class="field-label" data-translate="profile.weight">Weight:</span>
+                <span class="field-value" id="weightField" data-translate="profile.notSpecified">Not specified</span>
+                <button class="edit-btn" onclick="editField('weightField', 'number')">Edit</button>
+            </div>
+
+            <div class="profile-field">
+                <span class="field-label" data-translate="profile.height">Height:</span>
+                <span class="field-value" id="heightField" data-translate="profile.notSpecified">Not specified</span>
+                <button class="edit-btn" onclick="editField('heightField', 'number')">Edit</button>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h2 class="section-title" data-translate="profile.medicalInfo">Medical information</h2>
+
+            <div class="profile-field">
+                <span class="field-label" data-translate="profile.allergies">Allergies:</span>
+                <span class="field-value" id="allergiesField" data-translate="profile.none">None</span>
+                <button class="edit-btn" onclick="editField('allergiesField', 'text')">Edit</button>
+            </div>
+
+            <div class="profile-field">
+                <span class="field-label" data-translate="profile.diseases">Chronic diseases:</span>
+                <span class="field-value" id="diseasesField" data-translate="profile.none" >None</span>
+                <button class="edit-btn" onclick="editField('diseasesField', 'text')">Edit</button>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h2 class="section-title">Contact details</h2>
+
+            <div class="profile-field">
+                <span class="field-label" data-translate="profile.phone">Phone:</span>
+                <span class="field-value" id="phoneField" data-translate="profile.notSpecified">Not specified</span>
+                <button class="edit-btn" onclick="editField('phoneField', 'tel')">Edit</button>
+            </div>
+
+            <div class="profile-field">
+                <span class="field-label" data-translate="profile.address">Adress:</span>
+                <span class="field-value" id="addressField" data-translate="profile.notSpecified">Not specified</span>
+                <button class="edit-btn" onclick="editField('addressField', 'text')">Edit</button>
+            </div>
+        </div>
+
+        <button class="save-btn" id="saveProfileBtn" style="display: none;" data-translate="common.save">Save</button>
+    </div>
+
+    <!-- Popup de déconnexion -->
+    <div class="popup" id="logoutPopup">
+        <div class="popup-content">
+            <p>Are you sure you want to log out of your account ?</p>
+            <button id="logoutBtn">Log Out</button>
+            <button id="cancelLogout">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        // Fonctionnalité de la barre latérale
+        const sidebar = document.getElementById('sidebar');
+        const menuToggle = document.getElementById('menuToggle');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const openLogoutPopup = document.getElementById('openLogoutPopup');
+        const logoutPopup = document.getElementById('logoutPopup');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const cancelLogout = document.getElementById('cancelLogout');
+
+        if (menuToggle && closeSidebar && sidebar) {
+            menuToggle.addEventListener('click', () => {
+                sidebar.style.width = '250px';
+            });
+
+            closeSidebar.addEventListener('click', () => {
+                sidebar.style.width = '0';
+            });
+
+            window.addEventListener('click', (e) => {
+                if (e.target !== sidebar && e.target !== closeSidebar && e.target !== menuToggle) {
+                    sidebar.style.width = '0';
+                }
+            });
+        }
+
+        // Gestion de la déconnexion
+        openLogoutPopup.addEventListener('click', () => {
+            logoutPopup.style.display = 'flex';
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('currentUser');
+            alert('Logout successful !');
+            window.location.href = "inscription.html";
+        });
+
+        cancelLogout.addEventListener('click', () => {
+            logoutPopup.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === logoutPopup) {
+                logoutPopup.style.display = 'none';
+            }
+        });
+
+        // Chargement du profil utilisateur
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+
+            if (currentUser) {
+                const userProfile = users.find(user => user.username === currentUser.username) || {};
+
+                // Afficher le nom et le nom d'utilisateur
+                document.getElementById('profileName').textContent = currentUser.name;
+                document.getElementById('profileUsername').textContent = `@${currentUser.username}`;
+
+                // Charger la photo de profil si elle existe
+                if (userProfile.photo) {
+                    document.getElementById('profilePhoto').src = userProfile.photo;
+                }
+
+                // Charger les autres informations du profil
+                const fields = {
+                    age: 'ageField',
+                    gender: 'genderField',
+                    bloodType: 'bloodTypeField',
+                    weight: 'weightField',
+                    height: 'heightField',
+                    allergies: 'allergiesField',
+                    diseases: 'diseasesField',
+                    phone: 'phoneField',
+                    address: 'addressField'
+                };
+
+                for (const [key, fieldId] of Object.entries(fields)) {
+                    if (userProfile[key]) {
+                        let value = userProfile[key];
+                        // Ajouter les unités si nécessaire
+                        if (key === 'weight') value += ' kg';
+                        if (key === 'height') value += ' cm';
+                        document.getElementById(fieldId).textContent = value;
+                    }
+                }
+            }
+
+            // Gestion de l'upload de photo
+            const uploadBtn = document.getElementById('uploadBtn');
+            const photoUpload = document.getElementById('photoUpload');
+
+            uploadBtn.addEventListener('click', () => {
+                photoUpload.click();
+            });
+
+            photoUpload.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const photoUrl = event.target.result;
+                        document.getElementById('profilePhoto').src = photoUrl;
+
+                        // Sauvegarder la photo dans le profil utilisateur
+                        if (currentUser) {
+                            const userIndex = users.findIndex(user => user.username === currentUser.username);
+                            if (userIndex !== -1) {
+                                users[userIndex].photo = photoUrl;
+                                localStorage.setItem('users', JSON.stringify(users));
+                            }
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+
+        // Fonction pour modifier un champ
+        function editField(fieldId, inputType, options = null) {
+            const fieldElement = document.getElementById(fieldId);
+            let currentValue = fieldElement.textContent;
+
+            // Supprimer les unités si présentes
+            if (fieldId === 'weightField' || fieldId === 'heightField') {
+                currentValue = currentValue.replace(/\s*(kg|cm)/, '');
+            }
+
+            let inputElement;
+
+            if (inputType === 'select' && options) {
+                inputElement = document.createElement('select');
+                options.forEach(option => {
+                    const optionElement = document.createElement('option');
+                    optionElement.value = option;
+                    optionElement.textContent = option;
+                    if (option === currentValue || (currentValue === 'Not specified' && option === '')) {
+                        optionElement.selected = true;
+                    }
+                    inputElement.appendChild(optionElement);
+                });
+            } else {
+                inputElement = document.createElement('input');
+                inputElement.type = inputType;
+                inputElement.value = currentValue === 'Not specified' ? '' : currentValue;
+
+                // Validation pour les champs numériques
+                if (inputType === 'number') {
+                    inputElement.min = 0;
+                    inputElement.step = fieldId === 'weightField' ? '0.1' : '1';
+                }
+            }
+
+            fieldElement.textContent = '';
+            fieldElement.appendChild(inputElement);
+            inputElement.focus();
+
+            // Afficher le bouton Enregistrer
+            document.getElementById('saveProfileBtn').style.display = 'block';
+        }
+
+        // Sauvegarde du profil
+        document.getElementById('saveProfileBtn').addEventListener('click', () => {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+
+            if (currentUser) {
+                const userIndex = users.findIndex(user => user.username === currentUser.username);
+                if (userIndex !== -1) {
+                    // Validation des champs numériques
+                    const numberFields = ['age', 'weight', 'height'];
+                    const errors = [];
+
+                    numberFields.forEach(field => {
+                        const fieldId = `${field}Field`;
+                        const inputElement = document.getElementById(fieldId).firstChild;
+
+                        if (inputElement && inputElement.value) {
+                            const value = parseFloat(inputElement.value);
+                            if (isNaN(value)) {
+                                errors.push(`The field ${field} must be a number`);
+                            } else if (value < 0) {
+                                errors.push(`The field ${field} cannot be negative`);
+                            }
+                        }
+                    });
+
+                    if (errors.length > 0) {
+                        alert(errors.join('\n'));
+                        return;
+                    }
+
+                    // Si validation OK, sauvegarder tous les champs
+                    const fields = {
+                        ageField: 'age',
+                        genderField: 'gender',
+                        bloodTypeField: 'bloodType',
+                        weightField: 'weight',
+                        heightField: 'height',
+                        allergiesField: 'allergies',
+                        diseasesField: 'diseases',
+                        phoneField: 'phone',
+                        addressField: 'address'
+                    };
+
+                    for (const [fieldId, prop] of Object.entries(fields)) {
+                        const fieldElement = document.getElementById(fieldId);
+                        if (fieldElement.firstChild) {
+                            let value = fieldElement.firstChild.value;
+
+                            // Pour les champs vides, mettre "Non spécifié"
+                            if (!value && (fieldId === 'allergiesField' || fieldId === 'diseasesField')) {
+                                value = 'None';
+                            } else if (!value) {
+                                value = 'Not specified';
+                            }
+
+                            users[userIndex][prop] = value;
+
+                            // Afficher la valeur avec le format approprié
+                            if (fieldId === 'weightField' && value !== 'Not specified') {
+                                fieldElement.textContent = value + ' kg';
+                            } else if (fieldId === 'heightField' && value !== 'Not specified') {
+                                fieldElement.textContent = value + ' cm';
+                            } else {
+                                fieldElement.textContent = value;
+                            }
+                        }
+                    }
+
+                    localStorage.setItem('users', JSON.stringify(users));
+                    alert('Profile successfully updated !');
+                    document.getElementById('saveProfileBtn').style.display = 'none';
+                }
+            }
+        });
+    </script>
+    <script src="notification.js"></script>
+</body>
+
+</html>

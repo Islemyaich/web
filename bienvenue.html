@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenue</title>
+    <link href="logo.png" type="image/x-icon" rel="icon" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: #eefbef;
+            color: #333;
+            line-height: 1.6;/*l’espacement des lignes*/
+        }
+
+        .welcome-container {
+            max-width: 500px;
+            margin: 0 auto; /*L’élément reste au centre peu importe la largeur de l'écran*/
+            padding: 2rem;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;/*Dispose les éléments du haut vers le bas*/
+        }
+
+        .slide {
+            flex: 1;/*Permet à .slide de prendre tout l'espace disponible à l'intérieur du conteneur .welcome-container*/
+            display: none;/*Cache toutes les diapositives par défaut. Permet d'afficher uniquement une diapositive à la fois en activant .slide.active*/
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .slide.active {
+            display: flex;/*Applique uniquement à la diapositive active*/
+        }
+
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            color: #7f8c8d;
+            text-align: center;
+        }
+
+        .nav-footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .progress-dots {
+            display: flex;/*Permet d'aligner les points en ligne horizontale*/
+            justify-content: center;/*Centre horizontalement les points dans leur conteneur*/
+            gap: 10px;/*un espace de 10 pixels entre chaque point*/
+            margin-bottom: 2rem;/*Ajoute un espace sous les points pour les séparer des boutons de navigation*/
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;/*Transforme les points en cercles*/
+            background-color: #bdc3c7;
+        }
+
+        .dot.active {
+            background-color: #088074;
+        }
+
+        .nav-buttons {
+            display: flex;/*Assure que les boutons sont alignés horizontalement*/
+            justify-content: space-between;
+            width: 100%;/*Le conteneur des boutons prend toute la largeur disponible(espace)*/
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #088074;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #088074;
+            border: 2px solid #088074;
+        }
+
+        .btn-primary:hover {
+            background-color: #5db8af;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5db8af40;
+        }
+
+        .start-screen {
+            text-align: center;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 2rem;
+        }
+
+        .start-screen h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .start-screen p {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            max-width: 350px;
+        }
+
+        .get-started-btn {
+            background-color: #088074;
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Welcome Slides -->
+    <div class="welcome-container">
+        <!-- Medication Slide -->
+        <div class="slide active" id="slide1">
+            <div class="slide-content">
+                <h1>Medications</h1>
+                <img src="medication.png">
+                <p>Never miss a dose and take control of your health.</p>
+            </div>
+            <div class="nav-footer">
+                <div class="progress-dots">
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+                <div class="nav-buttons">
+                    <div style="visibility: hidden;">
+                        <button class="btn-secondary">Back</button>
+                    </div>
+                    <button class="btn-primary" onclick="nextSlide()">Next</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prescriptions Slide -->
+        <div class="slide" id="slide2">
+            <div class="slide-content">
+                <h1>Prescriptions</h1>
+                <img src="prescription.png">
+                <p>Start saving your health information today.</p>
+            </div>
+            <div class="nav-footer">
+                <div class="progress-dots">
+                    <div class="dot"></div>
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn-secondary" onclick="prevSlide()">Back</button>
+                    <button class="btn-primary" onclick="nextSlide()">Next</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointments Slide -->
+        <div class="slide" id="slide3">
+            <div class="slide-content">
+                <h1>Appointments</h1>
+                <img src="appointment.png">
+                <p>Start now to never miss an appointment again.</p>
+            </div>
+            <div class="nav-footer">
+                <div class="progress-dots">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot active"></div>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn-secondary" onclick="prevSlide()">Back</button>
+                    <button class="btn-primary" onclick="showStartScreen()">Finish</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Start Screen -->
+    <div class="start-screen" id="startScreen">
+        <h1>Start your journey</h1>
+        <img src="get_started.png">
+        <p>Start your journey towards improved health with just one tap.</p>
+        <a href="inscription.html" class="get-started-btn">Get Started</a>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 3;
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                document.getElementById(`slide${currentSlide}`).classList.remove('active');
+                currentSlide++;
+                document.getElementById(`slide${currentSlide}`).classList.add('active');
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                document.getElementById(`slide${currentSlide}`).classList.remove('active');
+                currentSlide--;
+                document.getElementById(`slide${currentSlide}`).classList.add('active');
+            }
+        }
+
+        function showStartScreen() {
+            document.querySelector('.welcome-container').style.display = 'none'; /*Cache le diaporama*/
+            document.getElementById('startScreen').style.display = 'flex';/*Affiche l'écran de démarrage*/
+        }
+    </script>
+</body>
+
+</html>

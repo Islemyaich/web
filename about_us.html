@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediAssist - About Us</title>
+    <link href="logo.png" type="image/x-icon" rel="icon" />
+    <script src="theme.js" defer></script>
+    <script src="translations.js" defer></script>
+    <script src="notifications.js" defer></script>
+    <style>
+        :root {
+            --primary: #007e81;
+            --secondary: #0e8898;
+            --text: #434a54;
+            --light: #f5f7fa;
+            --siderbar: #fff;
+            --sidebar_text: #333;
+            --white_black: white;
+            --black_white: black;
+            --cointainer: rgba(255, 255, 255, 0.9);
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --primary: #00a5a8;
+            --secondary: #0da8ba;
+            --text: #e0e0e0;
+            --light: #121212;
+            --siderbar: #00120c;
+            --sidebar_text: #a7a7a7;
+            --white_black: black;
+            --black_white: white;
+            --cointainer:rgba(0, 0, 0, 0.1);
+            --shadow: rgba(255, 255, 255, 0.9);
+        }
+
+        @media (prefers-color-scheme: dark) {
+        :root[data-theme="system"] {
+            --primary: #00a5a8;
+            --secondary: #0da8ba;
+            --text: #e0e0e0;
+            --light: #121212;
+            --siderbar: #fff;
+            --sidebar_text: #a7a7a7;
+            --white_black: black;
+            --black_white: white;
+            --cointainer:rgba(0, 0, 0, 0.1);
+            --shadow: rgba(255, 255, 255, 0.9);
+        }
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+            background-image: url("Accueil-background.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: #00120c;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            background-color: #01180a00;
+            color: white;
+            padding: 15px 20px;
+        }
+
+        .menu-btn {
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: var(--siderbar);
+            overflow-x: hidden;
+            transition: 0.3s;
+            box-shadow: 2px 0 8px var(--shadow);
+            z-index: 1001;
+            padding-top: 60px;
+        }
+
+        .sidebar a {
+            padding: 12px 24px;
+            text-decoration: none;
+            font-size: 18px;
+            color: var(--sidebar_text);
+            display: block;
+            transition: background-color 0.2s;
+        }
+
+        .sidebar a:hover {
+            background-color: #77b827;
+        }
+
+        #closeSidebar {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--black_white);
+            transition: color 0.3s ease;
+        }
+
+        #closeSidebar:hover {
+            color: rgb(225, 52, 0);
+        }
+
+        .about-container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: var(--cointainer);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .about-section {
+            margin-bottom: 30px;
+        }
+
+        .about-section h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 5px;
+        }
+
+        .about-section p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .team {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .team-member {
+            background: var(--white_black);
+            border-radius: 10px;
+            padding: 20px;
+            width: 250px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+
+        .team-member img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 3px solid var(--primary);
+        }
+
+        .team-member h3 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .team-member p.role {
+            color: var(--secondary);
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .contact-info {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .contact-item i {
+            font-size: 20px;
+            color: var(--primary);
+            margin-right: 10px;
+            width: 30px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .about-container {
+                margin: 20px 15px;
+                padding: 20px;
+            }
+
+            .team-member {
+                width: 100%;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+
+<body>
+    <header>
+        <button class="menu-btn" id="menuToggle">&#9776;</button>
+    </header>
+
+    <!-- Barre de Navigation -->
+    <div id="sidebar" class="sidebar">
+        <span id="closeSidebar">&times;</span>
+        <a href="accueil.html">🏠 Home</a>
+    </div>
+
+    <div class="about-container">
+        <h1>About MediAssist-Reminder</h1>
+
+        <div class="about-section">
+            <h2>Our Mission</h2>
+            <p>MediAssist-Reminder was born out of a simple idea: healthcare should be accessible, manageable, and
+                stress-free for everyone. Our mission is to empower individuals to take control of their health through
+                intuitive tools that simplify medication management, appointment tracking, and health monitoring.</p>
+            <p>We believe that technology should serve as a bridge between patients and better health outcomes, not as a
+                barrier. That's why we've designed MediAssist-Reminder to be user-friendly, reliable, and secure.</p>
+        </div>
+
+        <div class="about-section">
+            <h2>Our Story</h2>
+            <p>Founded in 2023 by a team of healthcare professionals and technology experts, MediAssist-Reminder started
+                as a small project to help elderly family members manage their complex medication schedules. Seeing the
+                positive impact it had on their lives, we realized this solution could benefit millions of people
+                worldwide.</p>
+            <p>Today, MediAssist-Reminder has grown into a comprehensive health companion used by individuals,
+                caregivers, and healthcare providers across multiple countries. Our team remains committed to continuous
+                improvement and innovation in digital health solutions.</p>
+        </div>
+
+        <div class="about-section">
+            <h2>Meet Our Team</h2>
+            <div class="team">
+                <div class="team-member">
+                    <img src="medecin.jpg" alt="Dr. Sara">
+                    <h3>Dr. Sara</h3>
+                    <p class="role">Chief Medical Officer</p>
+                    <p>Board-certified physician with 15 years of clinical experience.</p>
+                </div>
+
+                <div class="team-member">
+                    <img src="lead.jpg" alt="Mohamed">
+                    <h3>Mohamed</h3>
+                    <p class="role">Lead Developer</p>
+                    <p>Software engineer specializing in healthcare applications.</p>
+                </div>
+
+                <div class="team-member">
+                    <img src="designer.jpg" alt="Amir">
+                    <h3>Amir</h3>
+                    <p class="role">UX Designer</p>
+                    <p>Focused on creating accessible interfaces for all users.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-section contact-info">
+            <h2>Contact Us</h2>
+            <div class="contact-item">
+                <i class="fas fa-envelope"></i>
+                <span>support@mediassist.com</span>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-phone"></i>
+                <span>+216 21 345 678</span>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>123 Health MediAssist, Tunisia</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const menuToggle = document.getElementById('menuToggle');
+        const closeSidebar = document.getElementById('closeSidebar');
+
+        // Ouvrir la barre de navigation
+        menuToggle.addEventListener('click', () => {
+            sidebar.style.width = '250px';
+        });
+
+        // fermer la barre de navigation
+        closeSidebar.addEventListener('click', () => {
+            closeSidebar.style.color = 'red';
+            sidebar.style.width = '0';
+        });
+        
+        window.addEventListener('click', (e) => {
+            if (e.target !== sidebar && e.target !== closeSidebar && e.target !== menuToggle) {
+                sidebar.style.width = '0'; // Close sidebar when clicking outside
+            }
+        });
+    </script>
+</body>
+
+</html>

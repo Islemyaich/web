@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">   <!--prend en charge toutes les langues-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  <!--Ensures your website is responsive on different screen sizes-->
+    <title>MediAssist</title>
+    <link href="logo.png" type="image/x-icon" rel="icon"/>
+    <style>
+        
+        body {
+            width: 100vw;
+            height: 100vh; /* Prend toute la hauteur visible */
+            background-image: url('Page_1_2.jpg');
+            background-size: 100% 100%;/* Stretches the image to fit */
+            background-repeat: no-repeat; /* Empêche la répétition */
+        }
+
+        /* Animation de fond */
+        .bg-pattern {
+            position: absolute;/*L’élément couvre tout l’écran*/
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.1) 2px, transparent 2px);/*Crée des petits cercles blancs transparents*/
+            background-size: 30px 30px;/*Chaque cercle fait 30 pixels de large*/
+            z-index: -1;/* Met cet effet derrière tous les autres éléments*/
+            animation: movePattern 60s linear infinite;/*L’animation dure 60 secondes, se fait de manière fluide (linear) et se répète en boucle (infinite)*/
+        }
+
+        @keyframes movePattern {
+            0% {
+                background-position: 0 0;/*Le motif est fixé à (0, 0) (haut gauche)*/
+            }
+
+            100% {
+                background-position: 1000px 1000px;/*Le motif se déplace vers (1000px, 1000px)*/
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-pattern"></div>  <!--crée l’effet d’arrière-plan-->
+    <script>
+        setTimeout(function () {
+            window.location.href = "bienvenue.html"; // Change this to your next page URL
+        }, 3000); // 3000 milliseconds = 3 seconds
+    </script>
+
+</body>
+
+</html>

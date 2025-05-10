@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediAssist - Prescriptions</title>
+    <link href="logo.png" type="image/x-icon" rel="icon">
+    <script src="theme.js" defer></script>
+    <script src="translations.js" defer></script>
+    <style>
+        :root {
+            --primary: #007e81;
+            --secondary: #0e8898;
+            --text: #434a54;
+            --light: #f5f7fa;
+            --siderbar: #fff;
+            --sidebar_text: #333;
+            --white_black: white;
+            --black_white: black;
+            --cointainer: rgba(255, 255, 255, 0.9);
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --primary: #00a5a8;
+            --secondary: #0da8ba;
+            --text: #e0e0e0;
+            --light: #121212;
+            --siderbar: #00120c;
+            --sidebar_text: #a7a7a7;
+            --white_black: black;
+            --black_white: white;
+            --cointainer: rgba(0, 0, 0, 0.1);
+            --shadow: rgba(255, 255, 255, 0.9);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+            background-image: url("Accueil-background.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            min-height: 100vh;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #01180a00;
+            color: white;
+            padding: 15px 20px;
+        }
+
+        .menu-btn {
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: var(--siderbar);
+            overflow-x: hidden;
+            transition: 0.3s;
+            box-shadow: 2px 0 8px var(--shadow);
+            z-index: 1001;
+            padding-top: 60px;
+        }
+
+        .sidebar a {
+            padding: 12px 24px;
+            text-decoration: none;
+            font-size: 18px;
+            color: var(--sidebar_text);
+            display: block;
+            transition: background-color 0.2s;
+        }
+
+        .sidebar a:hover {
+            background-color: #77b827;
+        }
+
+        #closeSidebar {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--black_white);
+            transition: color 0.3s ease;
+        }
+
+        #closeSidebar:hover {
+            color: rgb(225, 52, 0);
+        }
+
+        .prescription-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: var(--cointainer);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px var(--shadow);
+            padding: 20px;
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.2rem;
+        }
+
+        .search-section {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: var(--white_black);
+            color: var(--text);
+        }
+
+        .action-btn {
+            padding: 10px 15px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .action-btn:hover {
+            background-color: var(--secondary);
+        }
+
+        .prescription-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 30px;
+        }
+
+        .prescription-item {
+            background-color: rgba(0, 126, 129, 0.1);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .prescription-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .prescription-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .prescription-name {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .prescription-meta {
+            color: var(--text);
+            opacity: 0.8;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .prescription-photo-container {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .prescription-photo {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .prescription-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .action-btn-small {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            border-radius: 5px;
+        }
+
+        .print-btn {
+            background-color: #28a745;
+        }
+
+        .download-btn {
+            background-color: #17a2b8;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text);
+            opacity: 0.7;
+            padding: 30px;
+        }
+
+        .add-section {
+            margin-top: 30px;
+            background-color: var(--cointainer);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .add-section h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: var(--white_black);
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        .add-btn {
+            background-color: var(--primary);
+            color: var(--white_black);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(74, 137, 220, 0.3);
+        }
+
+        .add-btn:hover {
+            background-color: #77b827;
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(74, 137, 220, 0.4);
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 10px;
+            background-color: var(--white_black);
+            color: var(--text);
+            border: 1px dashed #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .file-input-label:hover {
+            border-color: var(--primary);
+        }
+
+        #photoInput {
+            display: none;
+        }
+
+        .photo-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin: 10px auto;
+            display: block;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            .print-content,
+            .print-content * {
+                visibility: visible;
+            }
+
+            .print-content {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 20px;
+                background-color: white;
+                color: black;
+            }
+
+            .prescription-actions {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .prescription-container {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            .search-section {
+                flex-direction: column;
+            }
+
+            .prescription-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .prescription-actions {
+                justify-content: flex-start;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <button class="menu-btn" id="menuToggle">&#9776;</button>
+    </header>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar">
+        <span id="closeSidebar">&times;</span>
+        <a href="accueil.html">🏠 Home</a>
+        <a href="profil.html">👤 Profile</a>
+        <a href="emergency.html">🆘 Emergency</a>
+        <a href="medication.html">💊 Medication</a>
+        <a href="appointments.html">📅 Appointments</a>
+        <a href="schedule.html">⏰ Schedule</a>
+    </div>
+
+    <div class="prescription-container">
+        <h1 data-translate="prescriptions.title">Prescriptions</h1>
+
+        <div class="search-section">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search prescriptions..." data-translate-placeholder="prescriptions.search">
+            <button class="action-btn" onclick="searchPrescriptions()" data-translate="prescriptions.searchBtn">Search</button>
+        </div>
+
+        <ul class="prescription-list" id="prescriptionList">
+            <!-- Prescriptions will be loaded here -->
+        </ul>
+
+        <div class="add-section">
+            <h2 data-translate="prescriptions.addBtn2">Add New Prescription</h2>
+            <div class="input-group">
+                <input type="text" id="prescriptionName" placeholder="Prescription Name" required data-translate-placeholder="prescriptions.name">
+            </div>
+            <div class="input-group">
+                <select id="prescriptionType">
+                    <option value="" data-translate="prescriptions.type">Select type...</option>
+                    <option value="doctor" data-translate="prescriptions.doctor">Doctor Prescription</option>
+                    <option value="hospital" data-translate="prescriptions.hospita">Hospital Prescription</option>
+                </select>
+            </div>
+            <div class="input-group" id="doctorGroup" style="display:none">
+                <input type="text" id="doctorName" placeholder="Doctor's Name" data-translate-placeholder="prescriptions.doctorName">
+            </div>
+            <div class="input-group" id="hospitalGroup" style="display:none">
+                <input type="text" id="hospitalName" placeholder="Hospital Name" data-translate-placeholder="prescriptions.hospitalName">
+            </div>
+            <label for="photoInput" class="file-input-label">
+                📷 Upload Prescription Photo/Report
+            </label>
+            <input type="file" id="photoInput" accept="image/*" required>
+            <img id="photoPreview" class="photo-preview" style="display: none;">
+            <button class="add-btn" onclick="addPrescription()" data-translate="prescriptions.addBtn">Add Prescription</button>
+        </div>
+    </div>
+
+    <script>
+        // Sidebar functionality
+        const sidebar = document.getElementById('sidebar');
+        const menuToggle = document.getElementById('menuToggle');
+        const closeSidebar = document.getElementById('closeSidebar');
+
+        if (menuToggle && closeSidebar && sidebar) {
+            menuToggle.addEventListener('click', () => {
+                sidebar.style.width = '250px';
+            });
+
+            closeSidebar.addEventListener('click', () => {
+                sidebar.style.width = '0';
+            });
+
+            window.addEventListener('click', (e) => {
+                if (e.target !== sidebar && e.target !== closeSidebar && e.target !== menuToggle) {
+                    sidebar.style.width = '0';
+                }
+            });
+        }
+
+        // Show/hide doctor/hospital fields based on selection
+        document.getElementById('prescriptionType').addEventListener('change', function () {
+            const doctorGroup = document.getElementById('doctorGroup');
+            const hospitalGroup = document.getElementById('hospitalGroup');
+
+            doctorGroup.style.display = this.value === 'doctor' ? 'block' : 'none';
+            hospitalGroup.style.display = this.value === 'hospital' ? 'block' : 'none';
+        });
+
+        // Photo preview functionality
+        document.getElementById('photoInput').addEventListener('change', function (e) {
+            const preview = document.getElementById('photoPreview');
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(this.files[0]);
+            } else {
+                preview.style.display = 'none';
+            }
+        });
+
+        // Prescriptions functionality
+        function loadPrescriptions(filter = '') {
+            const prescriptionList = document.getElementById('prescriptionList');
+            prescriptionList.innerHTML = '';
+
+            // Get current user
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.username === currentUser?.username);
+
+            // Get prescriptions or empty array if none exist
+            let prescriptions = user?.prescriptions || [];
+
+            // Filter prescriptions if search term exists
+            if (typeof filter === 'string' && filter.trim() !== '') {
+                const searchTerm = filter.toLowerCase();
+                prescriptions = prescriptions.filter(p =>
+                    p.name.toLowerCase().includes(searchTerm) ||
+                    (p.doctor && p.doctor.toLowerCase().includes(searchTerm)) ||
+                    (p.hospital && p.hospital.toLowerCase().includes(searchTerm))
+                );
+            }
+
+            if (prescriptions.length === 0) {
+                prescriptionList.innerHTML = '<div class="empty-state" data-translate="prescriptions.emptyState">No prescriptions found. Add your first prescription below.</div>';
+                return;
+            }
+
+            prescriptions.forEach((prescription, index) => {
+                const li = document.createElement('li');
+                li.className = 'prescription-item';
+
+                // Determine the source text
+                let sourceText = '';
+                if (prescription.doctor) {
+                    sourceText = `Prescribed by: ${prescription.doctor}`;
+                } else if (prescription.hospital) {
+                    sourceText = `Hospital: ${prescription.hospital}`;
+                }
+
+                li.innerHTML = `
+                    <div class="prescription-header">
+                        <div>
+                            <div class="prescription-name">${prescription.name}</div>
+                            <div class="prescription-meta">${sourceText} • Date: ${prescription.date}</div>
+                        </div>
+                        <div class="prescription-actions">
+                            <button class="action-btn-small download-btn" onclick="downloadImage(${index})">Download</button>
+                            <button class="action-btn-small print-btn" onclick="printPrescription(${index})">Print</button>
+                            <button class="action-btn-small delete-btn" onclick="deletePrescription(${index})">Delete</button>
+                        </div>
+                    </div>
+                    <div class="prescription-photo-container">
+                        <img src="${prescription.photo}" class="prescription-photo" alt="Prescription">
+                    </div>
+                `;
+                prescriptionList.appendChild(li);
+            });
+        }
+
+        function addPrescription() {
+            const name = document.getElementById('prescriptionName').value.trim();
+            const type = document.getElementById('prescriptionType').value;
+            const doctor = document.getElementById('doctorName').value.trim();
+            const hospital = document.getElementById('hospitalName').value.trim();
+            const photoInput = document.getElementById('photoInput');
+
+            if (!name) {
+                alert('Please enter a prescription name!');
+                return;
+            }
+
+            if (type === 'doctor' && !doctor) {
+                alert('Please enter doctor name!');
+                return;
+            }
+
+            if (type === 'hospital' && !hospital) {
+                alert('Please enter hospital name!');
+                return;
+            }
+
+            if (!photoInput.files || !photoInput.files[0]) {
+                alert('Please upload a prescription image!');
+                return;
+            }
+
+            // Get current user
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const userIndex = users.findIndex(u => u.username === currentUser?.username);
+
+            if (userIndex === -1) {
+                alert('User not found!');
+                return;
+            }
+
+            // Initialize prescriptions array if it doesn't exist
+            if (!users[userIndex].prescriptions) {
+                users[userIndex].prescriptions = [];
+            }
+
+            // Handle the photo
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const photoData = e.target.result;
+
+                // Create prescription object
+                const prescription = {
+                    name,
+                    photo: photoData,
+                    date: new Date().toLocaleDateString()
+                };
+
+                // Add source information based on type
+                if (type === 'doctor') {
+                    prescription.doctor = doctor;
+                } else if (type === 'hospital') {
+                    prescription.hospital = hospital;
+                }
+
+                // Add new prescription
+                users[userIndex].prescriptions.push(prescription);
+
+                // Save to localStorage
+                localStorage.setItem('users', JSON.stringify(users));
+
+                // Clear inputs and reload prescriptions
+                document.getElementById('prescriptionName').value = '';
+                document.getElementById('prescriptionType').value = '';
+                document.getElementById('doctorName').value = '';
+                document.getElementById('hospitalName').value = '';
+                document.getElementById('photoInput').value = '';
+                document.getElementById('photoPreview').style.display = 'none';
+                document.getElementById('doctorGroup').style.display = 'none';
+                document.getElementById('hospitalGroup').style.display = 'none';
+
+                loadPrescriptions();
+            };
+            reader.readAsDataURL(photoInput.files[0]);
+        }
+
+        function deletePrescription(index) {
+            if (!confirm('Are you sure you want to delete this prescription?')) {
+                return;
+            }
+
+            // Get current user
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const userIndex = users.findIndex(u => u.username === currentUser?.username);
+
+            if (userIndex === -1) return;
+
+            // Remove prescription at specified index
+            if (users[userIndex].prescriptions) {
+                users[userIndex].prescriptions.splice(index, 1);
+            }
+
+            // Save to localStorage
+            localStorage.setItem('users', JSON.stringify(users));
+
+            // Reload prescriptions
+            loadPrescriptions();
+        }
+
+        function searchPrescriptions() {
+            const searchTerm = document.getElementById('searchInput').value.trim();
+            loadPrescriptions(searchTerm);
+        }
+
+        function downloadImage(index) {
+            // Get current user's prescription
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.username === currentUser?.username);
+            const prescription = user?.prescriptions?.[index];
+
+            if (!prescription || !prescription.photo) return;
+
+            // Create download link
+            const a = document.createElement('a');
+            a.href = prescription.photo;
+            a.download = `prescription_${prescription.name.replace(/\s+/g, '_')}_${prescription.date}.jpg`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function printPrescription(index) {
+            // Get current user's prescription
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.username === currentUser?.username);
+            const prescription = user?.prescriptions?.[index];
+
+            if (!prescription) return;
+
+            // Create print content
+            const printWindow = window.open('', '', 'width=800,height=600');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Prescription: ${prescription.name}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; padding: 20px; }
+                            .header { text-align: center; margin-bottom: 20px; }
+                            .title { color: #007e81; font-size: 24px; margin-bottom: 5px; }
+                            .meta { color: #555; margin-bottom: 20px; }
+                            .photo-container { text-align: center; margin: 20px 0; }
+                            .photo { max-width: 100%; max-height: 500px; }
+                            .footer { margin-top: 30px; text-align: right; font-size: 12px; color: #777; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="header">
+                            <div class="title">${prescription.name}</div>
+                            <div class="meta">
+                                ${prescription.doctor ? `Prescribed by: ${prescription.doctor}` : ''}
+                                ${prescription.hospital ? `Hospital: ${prescription.hospital}` : ''}
+                                <br>Date: ${prescription.date}
+                            </div>
+                        </div>
+                        <div class="photo-container">
+                            <img src="${prescription.photo}" class="photo">
+                        </div>
+                        <div class="footer">Printed from MediAssist on ${new Date().toLocaleDateString()}</div>
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.focus();
+            setTimeout(() => {
+                printWindow.print();
+                printWindow.close();
+            }, 500);
+        }
+
+        // Load prescriptions when page loads
+        window.onload = () => loadPrescriptions('');
+    </script>
+    <script src="notification.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediAssist - Settings</title>
+    <link href="logo.png" type="image/x-icon" rel="icon" />
+    <script src="theme.js" defer></script>
+    <script src="translations.js" defer></script>
+    <style>
+        :root {
+            --primary: #007e81;
+            --secondary: #0e8898;
+            --text: #434a54;
+            --light: #f5f7fa;
+            --background: #fff;
+            --sidebar_text: #333;
+            --white_black: white;
+            --black_white: black;
+            --cointainer: rgba(255, 255, 255, 0.9);
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --primary: #00a5a8;
+            --secondary: #0da8ba;
+            --text: #e0e0e0;
+            --light: #121212;
+            --background: #00120c;
+            --sidebar_text: #a7a7a7;
+            --white_black: black;
+            --black_white: white;
+            --cointainer: rgba(0, 0, 0, 0.1);
+            --shadow: rgba(255, 255, 255, 0.9);
+        }
+
+        /* System theme will automatically switch based on OS preference */
+        @media (prefers-color-scheme: dark) {
+            :root[data-theme="system"] {
+                --primary: #00a5a8;
+                --secondary: #0da8ba;
+                --text: #e0e0e0;
+                --light: #121212;
+                --background: #fff;
+                --surface: #1e1e1e;
+                --sidebar_text: #a7a7a7;
+                --white_black: black;
+                --black_white: white;
+                --cointainer: rgba(0, 0, 0, 0.1);
+                --shadow: rgba(255, 255, 255, 0.9);
+            }
+        }
+
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+            background-image: url("Accueil-background.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: #00120c;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            background-color: #01180a00;
+            color: white;
+            padding: 15px 20px;
+        }
+
+        .menu-btn {
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: var(--background);
+            overflow-x: hidden;
+            transition: 0.3s;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            padding-top: 60px;
+        }
+
+        .sidebar a {
+            padding: 12px 24px;
+            text-decoration: none;
+            font-size: 18px;
+            color: var(--sidebar_text);
+            display: block;
+            transition: background-color 0.2s;
+        }
+
+        .sidebar a:hover {
+            background-color: #77b827;
+        }
+
+        #closeSidebar {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--black_white);
+            transition: color 0.3s ease;
+        }
+
+        #closeSidebar:hover {
+            color: rgb(225, 52, 0);
+        }
+
+        .settings-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: var(--cointainer);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .settings-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .settings-section h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+        }
+
+        .setting-item label {
+            font-weight: 500;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: var(--white_black);
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: var(--primary);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(26px);
+        }
+
+        select,
+        input[type="time"],
+        input[type="number"] {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background-color: white;
+        }
+
+        .save-btn {
+            background: var(--primary);
+            color: var(--white_black);
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto 0;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .save-btn:hover {
+            background: #77b827;
+            transform: translateY(-2px);
+        }
+
+        .save-btn.saved {
+            background-color: #4caf50;
+            transform: scale(1.05);
+        }
+
+        .save-btn::after {
+            content: "";
+            position: absolute;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            transform: scale(0);
+            opacity: 0;
+            transition: transform 0.5s, opacity 1s;
+            pointer-events: none;
+        }
+
+        .save-btn:active::after {
+            width: 200px;
+            height: 200px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            transition: 0s;
+        }
+
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: var(--primary);
+            color: var(--white_black);
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            z-index: 9999;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 17px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.5s ease;
+        }
+
+        @media (max-width: 768px) {
+            .settings-container {
+                margin: 20px 15px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <button class="menu-btn" id="menuToggle">&#9776;</button>
+    </header>
+
+    <!-- Barre de Navigation -->
+    <div id="sidebar" class="sidebar">
+        <span id="closeSidebar">&times;</span>
+        <a href="accueil.html" data-translate="common.home">🏠 Home</a>
+    </div>
+
+    <div class="settings-container">
+        <h1 data-translate="settings.title">Settings</h1>
+
+        <div class="settings-section">
+            <h2 data-translate="settings.notifications">Notification Preferences</h2>
+
+            <div class="setting-item">
+                <label for="med-reminders" data-translate="settings.medReminders">Medication Reminders</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="med-reminders" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-item">
+                <label for="appt-reminders" data-translate="settings.apptReminders">Appointment Reminders</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="appt-reminders" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-item">
+                <label for="reminder-time" data-translate="settings.reminderTime">Default Reminder Time</label>
+                <input type="time" id="reminder-time" value="09:00">
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h2 data-translate="settings.privacy">Privacy Settings</h2>
+
+            <div class="setting-item">
+                <label for="data-sharing" data-translate="settings.dataSharing">Share Anonymous Usage Data</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="data-sharing">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-item">
+                <label for="emergency-access" data-translate="settings.emergencyAccess">Emergency Access</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="emergency-access" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h2 data-translate="settings.appPrefs">App Preferences</h2>
+
+            <div class="setting-item">
+                <label for="theme" data-translate="settings.theme">Theme</label>
+                <select id="theme">
+                    <option value="light" >Light</option>
+                    <option value="dark" >Dark</option>
+                    <option value="system" >System Default</option>
+                </select>
+            </div>
+
+            <div class="setting-item">
+                <label for="language" data-translate="settings.language">Language</label>
+                <select id="language">
+                    <option value="en">English</option>
+                    <option value="fr">Français</option>
+                    <option value="ar">العربية</option>
+                </select>
+            </div>
+
+            <div class="setting-item">
+                <label for="font-size" data-translate="settings.fontSize">Font Size</label>
+                <select id="font-size">
+                    <option value="small" >Small</option>
+                    <option value="medium" >Medium</option>
+                    <option value="large" >Large</option>
+                </select>
+            </div>
+        </div>
+
+        <button class="save-btn" data-translate="settings.saveBtn">Save Settings</button>
+    </div>
+
+    <div id="toast" data-translate="settings.savedToast">✅ Settings Saved!</div>
+
+    <script>
+        // Sidebar functionality
+        const sidebar = document.getElementById('sidebar');
+        const menuToggle = document.getElementById('menuToggle');
+        const closeSidebar = document.getElementById('closeSidebar');
+
+        if (menuToggle && closeSidebar && sidebar) {
+            menuToggle.addEventListener('click', () => {
+                sidebar.style.width = '250px';
+            });
+
+            closeSidebar.addEventListener('click', () => {
+                sidebar.style.width = '0';
+            });
+
+            window.addEventListener('click', (e) => {
+                if (e.target !== sidebar && e.target !== closeSidebar && e.target !== menuToggle) {
+                    sidebar.style.width = '0';
+                }
+            });
+        }
+
+        // Theme functionality
+        document.getElementById('theme').addEventListener('change', function () {
+            const theme = this.value;
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        });
+
+        // Language functionality
+        document.getElementById('language').addEventListener('change', function () {
+            const lang = this.value;
+            localStorage.setItem('language', lang);
+            document.documentElement.lang = lang;
+
+            // Apply RTL for Arabic
+            if (lang === 'ar') {
+                document.documentElement.dir = 'rtl';
+            } else {
+                document.documentElement.dir = 'ltr';
+            }
+
+            // Apply translations
+            applyLanguage();
+        });
+
+        // Save settings functionality
+        const saveBtn = document.querySelector('.save-btn');
+        const toast = document.getElementById('toast');
+
+        saveBtn.addEventListener('click', () => {
+            // Save notification preferences
+            localStorage.setItem('medReminders', document.getElementById('med-reminders').checked);
+            localStorage.setItem('apptReminders', document.getElementById('appt-reminders').checked);
+
+            // Save default reminder time
+            localStorage.setItem('reminderTime', document.getElementById('reminder-time').value);
+
+            // Save privacy settings
+            localStorage.setItem('dataSharing', document.getElementById('data-sharing').checked);
+            localStorage.setItem('emergencyAccess', document.getElementById('emergency-access').checked);
+
+            // Save app preferences
+            localStorage.setItem('theme', document.getElementById('theme').value);
+            localStorage.setItem('language', document.getElementById('language').value);
+            localStorage.setItem('fontSize', document.getElementById('font-size').value);
+
+            // Show visual feedback
+            saveBtn.classList.add('saved');
+            saveBtn.textContent = translations[getCurrentLanguage()]['settings.saveBtn'] + ' ✔️';
+
+            // Show toast notification
+            toast.style.visibility = 'visible';
+            toast.style.bottom = '50px';
+
+            setTimeout(() => {
+                saveBtn.classList.remove('saved');
+                saveBtn.textContent = translations[getCurrentLanguage()]['settings.saveBtn'];
+                toast.style.visibility = 'hidden';
+                toast.style.bottom = '30px';
+            }, 2000);
+        });
+
+        // Load saved settings
+        function loadSettings() {
+            // Load theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.getElementById('theme').value = savedTheme;
+
+            // Load language
+            const savedLang = localStorage.getItem('language') || 'en';
+            document.documentElement.lang = savedLang;
+            document.getElementById('language').value = savedLang;
+
+            // Set RTL for Arabic
+            if (savedLang === 'ar') {
+                document.documentElement.dir = 'rtl';
+            }
+
+            // Load other settings
+            if (localStorage.getItem('medReminders') !== null) {
+                document.getElementById('med-reminders').checked = (localStorage.getItem('medReminders') === 'true');
+            }
+
+            if (localStorage.getItem('apptReminders') !== null) {
+                document.getElementById('appt-reminders').checked = (localStorage.getItem('apptReminders') === 'true');
+            }
+
+            if (localStorage.getItem('reminderTime') !== null) {
+                document.getElementById('reminder-time').value = localStorage.getItem('reminderTime');
+            }
+
+            if (localStorage.getItem('dataSharing') !== null) {
+                document.getElementById('data-sharing').checked = (localStorage.getItem('dataSharing') === 'true');
+            }
+
+            if (localStorage.getItem('emergencyAccess') !== null) {
+                document.getElementById('emergency-access').checked = (localStorage.getItem('emergencyAccess') === 'true');
+            }
+
+            if (localStorage.getItem('fontSize') !== null) {
+                document.getElementById('font-size').value = localStorage.getItem('fontSize');
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSettings();
+            applyLanguage();
+        });
+    </script>
+</body>
+
+</html>

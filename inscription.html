@@ -1,0 +1,192 @@
+<!Doctype html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediAssist - Inscription</title>
+    <link href="logo.png" type="image/x-icon" rel="icon" />
+    <style>
+        body {
+            background-image: url('inscription.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            width: 100vw;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .formulaire {
+            background-color: rgba(120, 255, 181, 0.342);
+            box-shadow: 0 20px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            width: 300px;
+            padding: 20px;
+        }
+
+        input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #e5ffbc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #82bf20;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        a {
+            color: #82bf20;
+            text-decoration: none;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="formulaire" id="signup">
+        <h1>📝 Sign Up</h1>
+        <form id="signupForm">
+            <input type="text" placeholder="👤 Name" required>
+            <input type="email" placeholder="✉️ Email" required>
+            <input type="text" placeholder="🕵️ Username" required>
+            <input type="password" placeholder="🔒 Password" required>
+            <button type="submit">Sign Up</button>
+        </form>
+        <p>Already an user? <a href="#" id="goToLogin">Login</a></p>
+    </div>
+
+    <div class="formulaire" id="login" style="display:none;">
+        <h1>🔑 Login</h1>
+        <form id="loginForm">
+            <input type="text" placeholder="🕵️ Username" required>
+            <input type="password" placeholder="🔒 Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <p>Not yet registered? <a href="#" id="goToSignup">Sign Up</a></p>
+    </div>
+
+    <script>
+        // Chargement des utilisateurs depuis le stockage local
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+
+        // Récupération des éléments HTML
+        const signupForm = document.getElementById('signupForm');
+        const loginForm = document.getElementById('loginForm');
+        const signupContainer = document.getElementById('signup');
+        const loginContainer = document.getElementById('login');
+        const goToLogin = document.getElementById('goToLogin');
+        const goToSignup = document.getElementById('goToSignup');
+
+        // Gestion de l'inscription
+        signupForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            // Récupération des valeurs
+            const name = signupForm.querySelector('input[placeholder="👤 Name"]').value.trim();
+            const email = signupForm.querySelector('input[type="email"]').value.trim();
+            const username = signupForm.querySelector('input[placeholder="🕵️ Username"]').value.trim();
+            const password = signupForm.querySelector('input[type="password"]').value.trim();
+
+            // Validation
+            if (!name || !email || !username || !password) {
+                alert('Please fill in all fields!');
+                return;
+            }
+
+            if (users.some(u => u.username === username)) {
+                alert('Username already exists!');
+                return;
+            }
+
+            // Création du nouvel utilisateur avec un profil complet
+            const newUser = {
+                name,
+                email,
+                username,
+                password,
+                profile: {
+                    age: '',
+                    gender: '',
+                    bloodType: '',
+                    weight: '',
+                    height: '',
+                    allergies: '',
+                    diseases: '',
+                    phone: '',
+                    address: '',
+                    photo: ''
+                },
+                emergencyContacts: [] // Added emergency contacts 
+            };
+
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+
+            // Connecter l'utilisateur directement après l'inscription
+            localStorage.setItem('currentUser', JSON.stringify({ username, name }));
+
+            alert('Registration successful!');
+            window.location.href = 'accueil.html';
+        });
+
+        // Gestion de la connexion
+        loginForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const username = loginForm.querySelector('input[placeholder="🕵️ Username"]').value.trim();
+            const password = loginForm.querySelector('input[type="password"]').value.trim();
+
+            if (!username || !password) {
+                alert('Please fill in all fields!');
+                return;
+            }
+
+            const user = users.find(u => u.username === username && u.password === password);
+
+            if (!user) {
+                alert('Invalid username or password!');
+                return;
+            }
+
+            // Sauvegarder l'utilisateur connecté
+            localStorage.setItem('currentUser', JSON.stringify({
+                username: user.username,
+                name: user.name
+            }));
+
+            alert(`Welcome ${user.name} :)`);
+            window.location.href = "accueil.html";
+        });
+
+        // Navigation entre les formulaires
+        goToLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            signupContainer.style.display = 'none';
+            loginContainer.style.display = 'block';
+        });
+
+        goToSignup.addEventListener('click', (e) => {
+            e.preventDefault();
+            signupContainer.style.display = 'block';
+            loginContainer.style.display = 'none';
+        });
+    </script>
+</body>
+
+</html>
